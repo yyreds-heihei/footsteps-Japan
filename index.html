@@ -551,7 +551,7 @@
 
 <script>
 // ===== STATE =====
-let apiKey = '';
+let apiKey = 'AIzaSyAW3FWrj-u5jY21EylDQYmph_o8DnSb3yM';
 let channelHandle = '@footsteps8901';
 let channelId = '';
 let allPlaylists = [];
@@ -592,7 +592,7 @@ function shouldAutoHide(title) {
 // ===== STORAGE =====
 function loadStorage() {
   try {
-    apiKey = localStorage.getItem('fs_api_key') || '';
+    apiKey = localStorage.getItem('fs_api_key') || apiKey;
     channelHandle = localStorage.getItem('fs_channel') || '@footsteps8901';
     watchedMap = JSON.parse(localStorage.getItem('fs_watched') || '{}');
     hiddenPlaylists = new Set(JSON.parse(localStorage.getItem('fs_hidden') || '[]'));
@@ -608,8 +608,9 @@ function saveHidden() { localStorage.setItem('fs_hidden', JSON.stringify([...hid
 // ===== INIT =====
 window.onload = function() {
   loadStorage();
-  if (apiKey) { showMainApp(); loadChannel(); updateStreakLabel(); }
-  else { document.getElementById('setup-screen').style.display = 'block'; }
+  showMainApp();
+  loadChannel();
+  updateStreakLabel();
 };
 
 function showSetupError(msg) {
