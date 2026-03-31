@@ -134,7 +134,7 @@
     }
     .r-shape:hover { filter: brightness(0.85); }
     .r-shape.r-sel { stroke: #1b4332; stroke-width: 2.5; filter: brightness(0.75); }
-    .r-shape.r-empty { opacity: 0.28; pointer-events: none; }
+    .r-shape.r-empty { opacity: 0.30; }
     .r-label {
       font-family: -apple-system, 'Hiragino Sans', sans-serif;
       font-size: 10px; font-weight: 700; fill: #1b4332;
@@ -475,48 +475,43 @@
       <svg viewBox="0 0 340 445" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
         <!-- 北海道 -->
         <polygon class="r-shape" id="map-北海道" fill="#7ecfe0"
-          points="215,12 295,6 332,20 338,72 312,98 255,96 228,75 220,45"
-          onclick="selectRegion('北海道')"/>
+          points="215,12 295,6 332,20 338,72 312,98 255,96 228,75 220,45"/>
         <text class="r-label" x="278" y="55">北海道</text>
         <!-- 東北 -->
         <polygon class="r-shape" id="map-東北" fill="#95d5a8"
-          points="220,102 255,98 312,100 318,152 305,193 272,213 232,208 215,178 218,128"
-          onclick="selectRegion('東北')"/>
+          points="220,102 255,98 312,100 318,152 305,193 272,213 232,208 215,178 218,128"/>
         <text class="r-label" x="268" y="155">東北</text>
         <!-- 関東 -->
         <polygon class="r-shape" id="map-関東" fill="#f6c96b"
-          points="232,205 272,210 305,190 320,215 323,253 306,275 278,276 248,265 225,250 228,230"
-          onclick="selectRegion('関東')"/>
+          points="232,205 272,210 305,190 320,215 323,253 306,275 278,276 248,265 225,250 228,230"/>
         <text class="r-label" x="283" y="238">関東</text>
+        <!-- 北陸 -->
+        <polygon class="r-shape" id="map-北陸" fill="#a8ddd4"
+          points="140,172 196,160 220,172 215,218 188,230 158,224 140,208 140,178"/>
+        <text class="r-label" x="182" y="198">北陸</text>
         <!-- 中部 -->
         <polygon class="r-shape" id="map-中部" fill="#fae588"
-          points="155,172 218,162 228,172 225,250 248,265 215,285 183,278 162,262 140,235 140,208 150,182"
-          onclick="selectRegion('中部')"/>
-        <text class="r-label" x="193" y="225">中部</text>
+          points="158,224 188,230 215,218 228,172 225,250 248,265 215,285 183,278 162,262 140,235 140,210 158,224"/>
+        <text class="r-label" x="200" y="258">中部</text>
         <!-- 近畿 -->
         <polygon class="r-shape" id="map-近畿" fill="#d4a8d8"
-          points="115,248 140,238 140,235 162,262 183,278 185,310 158,325 125,313 108,290 110,258"
-          onclick="selectRegion('近畿')"/>
+          points="115,248 140,238 140,235 162,262 183,278 185,310 158,325 125,313 108,290 110,258"/>
         <text class="r-label" x="150" y="285">近畿</text>
         <!-- 中国 -->
         <polygon class="r-shape" id="map-中国" fill="#a8bdd8"
-          points="73,266 115,258 108,292 125,315 118,346 78,346 56,322 58,286"
-          onclick="selectRegion('中国')"/>
+          points="73,266 115,258 108,292 125,315 118,346 78,346 56,322 58,286"/>
         <text class="r-label" x="90" y="305">中国</text>
         <!-- 四国 -->
         <polygon class="r-shape" id="map-四国" fill="#f4d4a8"
-          points="115,338 192,332 205,360 175,380 118,380 105,356"
-          onclick="selectRegion('四国')"/>
+          points="115,338 192,332 205,360 175,380 118,380 105,356"/>
         <text class="r-label" x="155" y="358">四国</text>
         <!-- 九州 -->
         <polygon class="r-shape" id="map-九州・沖縄" fill="#f4a878"
-          points="33,292 76,286 80,323 68,354 45,368 22,354 17,320 28,300"
-          onclick="selectRegion('九州・沖縄')"/>
+          points="33,292 76,286 80,323 68,354 45,368 22,354 17,320 28,300"/>
         <text class="r-label" x="50" y="325">九州</text>
         <!-- 沖縄 -->
         <rect class="r-shape" id="map-okinawa" fill="#f4a878"
-          x="10" y="400" width="55" height="22" rx="5"
-          onclick="selectRegion('九州・沖縄')"/>
+          x="10" y="400" width="55" height="22" rx="5"/>
         <text class="r-label" x="37" y="411">沖縄</text>
         <line x1="37" y1="368" x2="37" y2="400" stroke="#e09060" stroke-width="1.2" stroke-dasharray="3,2" pointer-events="none"/>
       </svg>
@@ -621,13 +616,14 @@ let watchedDates = {}; // {videoId: "YYYY-MM-DD"}
 let calCurrentYear = new Date().getFullYear();
 let calCurrentMonth = new Date().getMonth(); // ← グローバルで管理（チェックバグ修正の核心）
 
-const regionOrder = ['すべて','北海道','東北','関東','中部','近畿','中国','四国','九州・沖縄','その他'];
+const regionOrder = ['すべて','北海道','東北','関東','北陸','中部','近畿','中国','四国','九州・沖縄','その他'];
 
 const regionKeywords = {
   '北海道': ['北海道','道内','札幌','函館','旭川','釧路','帯広','北見','小樽'],
   '東北': ['東北','青森','岩手','宮城','秋田','山形','福島','仙台'],
   '関東': ['関東','東京','神奈川','埼玉','千葉','茨城','栃木','群馬','横浜','川崎','さいたま'],
-  '中部': ['中部','新潟','富山','石川','福井','山梨','長野','岐阜','静岡','愛知','名古屋','金沢'],
+  '北陸': ['北陸','新潟','富山','石川','福井','金沢','長岡','上越'],
+  '中部': ['中部','山梨','長野','岐阜','静岡','愛知','名古屋'],
   '近畿': ['近畿','関西','三重','滋賀','京都','大阪','兵庫','奈良','和歌山','梅田','難波','神戸'],
   '中国': ['中国地方','鳥取','島根','岡山','広島','山口'],
   '四国': ['四国','徳島','香川','愛媛','高知'],
@@ -663,11 +659,34 @@ function saveWatched() {
 function saveHidden() { localStorage.setItem('fs_hidden', JSON.stringify([...hiddenPlaylists])); }
 
 // ===== INIT =====
+
+// ===== MAP LISTENERS =====
+function initMapListeners() {
+  const mapRegions = [
+    ['map-北海道','北海道'],['map-東北','東北'],['map-関東','関東'],
+    ['map-北陸','北陸'],['map-中部','中部'],['map-近畿','近畿'],
+    ['map-中国','中国'],['map-四国','四国'],
+    ['map-九州・沖縄','九州・沖縄'],['map-okinawa','九州・沖縄']
+  ];
+  const allBtn = document.getElementById('map-all-btn');
+  if (allBtn) {
+    allBtn.addEventListener('click', function(){ selectRegion('すべて'); });
+    allBtn.removeAttribute('onclick');
+  }
+  for (const [id, region] of mapRegions) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', (function(r){ return function(){ selectRegion(r); }; })(region));
+    el.addEventListener('touchend', (function(r){ return function(e){ e.preventDefault(); selectRegion(r); }; })(region), {passive:false});
+  }
+}
 window.onload = function() {
   loadStorage();
   showMainApp();
   loadChannel();
   updateStreakLabel();
+  initMapListeners();
 };
 
 function showSetupError(msg) {
@@ -936,7 +955,7 @@ function renderRegionTabs() {
   const allBtn = document.getElementById('map-all-btn');
   if (allBtn) allBtn.className = 'map-all-btn' + (currentRegion === 'すべて' ? ' active' : '');
   // 各地方のシェイプを更新
-  const regions = ['北海道','東北','関東','中部','近畿','中国','四国','九州・沖縄'];
+  const regions = ['北海道','東北','関東','北陸','中部','近畿','中国','四国','九州・沖縄'];
   for (const r of regions) {
     const el = document.getElementById('map-' + r);
     if (!el) continue;
