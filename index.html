@@ -116,23 +116,30 @@
     .btn-primary:hover { background: var(--primary-dark); }
     .error-msg { color: #dc3545; font-size: 0.85rem; margin-top: 8px; display: none; }
 
-    /* REGION TABS */
-    .region-tabs { background: white; border-bottom: 2px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .region-tabs::-webkit-scrollbar { display: none; }
-    .region-tabs-inner { display: flex; padding: 0 12px; min-width: max-content; }
-    .region-tab {
-      padding: 12px 16px; border: none; background: none; cursor: pointer;
-      font-size: 0.88rem; color: var(--text-muted);
-      border-bottom: 3px solid transparent; white-space: nowrap;
-      transition: all 0.2s; font-weight: 500; position: relative; top: 2px;
+    /* JAPAN MAP */
+    .map-container {
+      background: white; border-bottom: 2px solid var(--border);
+      padding: 12px 16px 8px; display: flex; flex-direction: column; align-items: center;
     }
-    .region-tab:hover { color: var(--primary); }
-    .region-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
-    .region-tab .tab-prog {
-      display: inline-block; background: var(--bg); border-radius: 99px;
-      padding: 1px 7px; font-size: 0.72rem; margin-left: 5px; color: var(--text-muted);
+    .map-all-btn {
+      margin-bottom: 10px; padding: 6px 28px; border-radius: 99px;
+      border: 2px solid var(--primary); background: white; color: var(--primary);
+      font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: all 0.2s;
     }
-    .region-tab.active .tab-prog { background: var(--primary-light); color: white; }
+    .map-all-btn.active { background: var(--primary); color: white; }
+    .map-svg-wrap { width: 100%; max-width: 360px; }
+    .r-shape {
+      stroke: white; stroke-width: 1.5;
+      transition: filter 0.15s, opacity 0.15s; cursor: pointer;
+    }
+    .r-shape:hover { filter: brightness(0.85); }
+    .r-shape.r-sel { stroke: #1b4332; stroke-width: 2.5; filter: brightness(0.75); }
+    .r-shape.r-empty { opacity: 0.28; pointer-events: none; }
+    .r-label {
+      font-family: -apple-system, 'Hiragino Sans', sans-serif;
+      font-size: 10px; font-weight: 700; fill: #1b4332;
+      pointer-events: none; text-anchor: middle; dominant-baseline: middle;
+    }
 
     /* CONTENT */
     #content { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
@@ -461,9 +468,59 @@
     <span class="prog-count" id="overall-count">0 / 0</span>
   </div>
 
-  <!-- REGION TABS -->
-  <div class="region-tabs">
-    <div class="region-tabs-inner" id="region-tabs-inner"></div>
+  <!-- JAPAN MAP -->
+  <div class="map-container" id="map-container">
+    <button class="map-all-btn active" id="map-all-btn" onclick="selectRegion('すべて')">🗾 すべての地域</button>
+    <div class="map-svg-wrap">
+      <svg viewBox="0 0 340 445" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- 北海道 -->
+        <polygon class="r-shape" id="map-北海道" fill="#7ecfe0"
+          points="215,12 295,6 332,20 338,72 312,98 255,96 228,75 220,45"
+          onclick="selectRegion('北海道')"/>
+        <text class="r-label" x="278" y="55">北海道</text>
+        <!-- 東北 -->
+        <polygon class="r-shape" id="map-東北" fill="#95d5a8"
+          points="220,102 255,98 312,100 318,152 305,193 272,213 232,208 215,178 218,128"
+          onclick="selectRegion('東北')"/>
+        <text class="r-label" x="268" y="155">東北</text>
+        <!-- 関東 -->
+        <polygon class="r-shape" id="map-関東" fill="#f6c96b"
+          points="232,205 272,210 305,190 320,215 323,253 306,275 278,276 248,265 225,250 228,230"
+          onclick="selectRegion('関東')"/>
+        <text class="r-label" x="283" y="238">関東</text>
+        <!-- 中部 -->
+        <polygon class="r-shape" id="map-中部" fill="#fae588"
+          points="155,172 218,162 228,172 225,250 248,265 215,285 183,278 162,262 140,235 140,208 150,182"
+          onclick="selectRegion('中部')"/>
+        <text class="r-label" x="193" y="225">中部</text>
+        <!-- 近畿 -->
+        <polygon class="r-shape" id="map-近畿" fill="#d4a8d8"
+          points="115,248 140,238 140,235 162,262 183,278 185,310 158,325 125,313 108,290 110,258"
+          onclick="selectRegion('近畿')"/>
+        <text class="r-label" x="150" y="285">近畿</text>
+        <!-- 中国 -->
+        <polygon class="r-shape" id="map-中国" fill="#a8bdd8"
+          points="73,266 115,258 108,292 125,315 118,346 78,346 56,322 58,286"
+          onclick="selectRegion('中国')"/>
+        <text class="r-label" x="90" y="305">中国</text>
+        <!-- 四国 -->
+        <polygon class="r-shape" id="map-四国" fill="#f4d4a8"
+          points="115,338 192,332 205,360 175,380 118,380 105,356"
+          onclick="selectRegion('四国')"/>
+        <text class="r-label" x="155" y="358">四国</text>
+        <!-- 九州 -->
+        <polygon class="r-shape" id="map-九州・沖縄" fill="#f4a878"
+          points="33,292 76,286 80,323 68,354 45,368 22,354 17,320 28,300"
+          onclick="selectRegion('九州・沖縄')"/>
+        <text class="r-label" x="50" y="325">九州</text>
+        <!-- 沖縄 -->
+        <rect class="r-shape" id="map-okinawa" fill="#f4a878"
+          x="10" y="400" width="55" height="22" rx="5"
+          onclick="selectRegion('九州・沖縄')"/>
+        <text class="r-label" x="37" y="411">沖縄</text>
+        <line x1="37" y1="368" x2="37" y2="400" stroke="#e09060" stroke-width="1.2" stroke-dasharray="3,2" pointer-events="none"/>
+      </svg>
+    </div>
   </div>
 
   <!-- CONTENT -->
@@ -874,17 +931,22 @@ function getCachedVideoIds(playlistId) {
   return { total: 0, watched: 0 };
 }
 function renderRegionTabs() {
-  const regions = getActiveRegions();
-  const container = document.getElementById('region-tabs-inner');
-  container.innerHTML = '';
+  const available = getActiveRegions();
+  // すべてボタン
+  const allBtn = document.getElementById('map-all-btn');
+  if (allBtn) allBtn.className = 'map-all-btn' + (currentRegion === 'すべて' ? ' active' : '');
+  // 各地方のシェイプを更新
+  const regions = ['北海道','東北','関東','中部','近畿','中国','四国','九州・沖縄'];
   for (const r of regions) {
-    const btn = document.createElement('button');
-    btn.className = 'region-tab' + (r === currentRegion ? ' active' : '');
-    const prog = getRegionProgress(r);
-    btn.innerHTML = r + '<span class="tab-prog">' + prog.watched + '/' + prog.total + '</span>';
-    btn.onclick = () => selectRegion(r);
-    container.appendChild(btn);
+    const el = document.getElementById('map-' + r);
+    if (!el) continue;
+    const sel = r === currentRegion;
+    const has = available.includes(r);
+    el.setAttribute('class', 'r-shape' + (sel ? ' r-sel' : '') + (!has ? ' r-empty' : ''));
   }
+  // 沖縄rectを九州と連動
+  const oEl = document.getElementById('map-okinawa');
+  if (oEl) oEl.setAttribute('class', 'r-shape' + (currentRegion === '九州・沖縄' ? ' r-sel' : ''));
 }
 function selectRegion(region) { currentRegion = region; renderRegionTabs(); filterPlaylists(); }
 
