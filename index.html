@@ -867,21 +867,38 @@ async function getChannelId(handle) {
   throw new Error('チャンネルが見つかりませんでした（@ハンドルが正しいか、またはチャンネルIDを直接入力してください）');
 }
 async function loadChannel() {
-  document.getElementById('loading-state').style.display = 'block';
-  document.getElementById('playlist-view').style.display = 'none';
-  document.getElementById('video-view').style.display = 'none';
-  document.getElementById('region-tabs-inner').innerHTML = '';
+  // キャッシュがあれば即座に表示
+  const cached = localStorage.getItem('fs_playlists_cache');
+  const cachedId = localStorage.getItem('fs_channel_id_cache');
+  if (cached) {
+    try {
+      allPlaylists = JSON.parse(cached);
+      if (cachedId) channelId = cachedId;
+      renderRegionTabs();
+      renderPlaylists();
+      document.getElementById('loading-state').style.display = 'none';
+    } catch(e) {}
+  } else {
+    document.getElementById('loading-state').style.display = 'block';
+    document.getElementById('playlist-view').style.display = 'none';
+    document.getElementById('video-view').style.display = 'none';
+  }
+  // バックグラウンドでAPIから最新データ取得
   try {
     channelId = await getChannelId(channelHandle);
+    localStorage.setItem('fs_channel_id_cache', channelId);
     await loadAllPlaylists();
+    localStorage.setItem('fs_playlists_cache', JSON.stringify(allPlaylists));
     renderRegionTabs();
     renderPlaylists();
   } catch(e) {
-    document.getElementById('loading-state').innerHTML =
-      '<div style="color:#dc3545;padding:8px;line-height:1.7;">' +
-      '❌ <strong>エラー：</strong>' + e.message +
-      getErrorHint(e.message) +
-      '<br><br><button class="btn-primary" onclick="openSettings()" style="width:auto;padding:10px 20px;">⚙️ 設定を開く</button></div>';
+    if (!cached) {
+      document.getElementById('loading-state').innerHTML =
+        '<div style="color:#dc3545;padding:8px;line-height:1.7;">' +
+        '❌ <strong>エラー：</strong>' + e.message +
+        getErrorHint(e.message) +
+        '<br><br><button class="btn-primary" onclick="openSettings()" style="width:auto;padding:10px 20px;">⚙️ 設定を開く</button></div>';
+    }
   }
 }
 async function loadAllPlaylists() {
