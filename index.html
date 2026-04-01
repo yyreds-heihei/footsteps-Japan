@@ -565,7 +565,7 @@
   <div class="settings-inner" onclick="event.stopPropagation()">
     <h3>⚙️ 設定</h3>
     <label>YouTube API キー</label>
-    <input type="text" id="settings-api-key" placeholder="APIキーを変更する場合は入力">
+    <input type="password" id="settings-api-key" placeholder="変更する場合のみ入力（現在は設定済み）" autocomplete="off">
     <label>チャンネルID または @ハンドル</label>
     <input type="text" id="settings-channel" placeholder="例: @footsteps8901">
     <button class="btn-primary" onclick="saveSettings()" style="margin-bottom:8px;">💾 保存して再読み込み</button>
@@ -1226,7 +1226,7 @@ function showPlaylistView() {
 
 // ===== SETTINGS =====
 function openSettings() {
-  document.getElementById('settings-api-key').value = apiKey;
+  document.getElementById('settings-api-key').value = ''; // セキュリティのため表示しない
   document.getElementById('settings-channel').value = channelHandle;
   renderHiddenList();
   document.getElementById('settings-panel').classList.add('active');
