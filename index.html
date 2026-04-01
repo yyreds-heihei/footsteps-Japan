@@ -116,23 +116,30 @@
     .btn-primary:hover { background: var(--primary-dark); }
     .error-msg { color: #dc3545; font-size: 0.85rem; margin-top: 8px; display: none; }
 
-    /* REGION TABS */
-    .region-tabs { background: white; border-bottom: 2px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-    .region-tabs::-webkit-scrollbar { display: none; }
-    .region-tabs-inner { display: flex; padding: 0 12px; min-width: max-content; }
-    .region-tab {
-      padding: 12px 16px; border: none; background: none; cursor: pointer;
-      font-size: 0.88rem; color: var(--text-muted);
-      border-bottom: 3px solid transparent; white-space: nowrap;
-      transition: all 0.2s; font-weight: 500; position: relative; top: 2px;
+    /* JAPAN MAP */
+    .map-container {
+      background: white; border-bottom: 2px solid var(--border);
+      padding: 12px 16px 8px; display: flex; flex-direction: column; align-items: center;
     }
-    .region-tab:hover { color: var(--primary); }
-    .region-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
-    .region-tab .tab-prog {
-      display: inline-block; background: var(--bg); border-radius: 99px;
-      padding: 1px 7px; font-size: 0.72rem; margin-left: 5px; color: var(--text-muted);
+    .map-all-btn {
+      margin-bottom: 10px; padding: 6px 28px; border-radius: 99px;
+      border: 2px solid var(--primary); background: white; color: var(--primary);
+      font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: all 0.2s;
     }
-    .region-tab.active .tab-prog { background: var(--primary-light); color: white; }
+    .map-all-btn.active { background: var(--primary); color: white; }
+    .map-svg-wrap { width: 100%; max-width: 360px; }
+    .r-shape {
+      stroke: white; stroke-width: 1.5;
+      transition: filter 0.15s, opacity 0.15s; cursor: pointer;
+    }
+    .r-shape:hover { filter: brightness(0.85); }
+    .r-shape.r-sel { stroke: #1b4332; stroke-width: 2.5; filter: brightness(0.75); }
+    .r-shape.r-empty { opacity: 0.30; }
+    .r-label {
+      font-family: -apple-system, 'Hiragino Sans', sans-serif;
+      font-size: 10px; font-weight: 700; fill: #1b4332;
+      pointer-events: none; text-anchor: middle; dominant-baseline: middle;
+    }
 
     /* CONTENT */
     #content { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
@@ -461,9 +468,34 @@
     <span class="prog-count" id="overall-count">0 / 0</span>
   </div>
 
-  <!-- REGION TABS -->
-  <div class="region-tabs">
-    <div class="region-tabs-inner" id="region-tabs-inner"></div>
+  <!-- JAPAN MAP -->
+  <div class="map-container" id="map-container">
+    <button class="map-all-btn active" id="map-all-btn">🗾 すべての地域</button>
+    <div class="map-svg-wrap">
+      <svg viewBox="0 0 340 445" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <polygon class="r-shape" id="map-北海道" fill="#7ecfe0" points="215,12 295,6 332,20 338,72 312,98 255,96 228,75 220,45"/>
+        <text class="r-label" x="278" y="55">北海道</text>
+        <polygon class="r-shape" id="map-東北" fill="#95d5a8" points="220,102 255,98 312,100 318,152 305,193 272,213 232,208 215,178 218,128"/>
+        <text class="r-label" x="268" y="155">東北</text>
+        <polygon class="r-shape" id="map-関東" fill="#f6c96b" points="232,205 272,210 305,190 320,215 323,253 306,275 278,276 248,265 225,250 228,230"/>
+        <text class="r-label" x="283" y="238">関東</text>
+        <polygon class="r-shape" id="map-北陸" fill="#a8ddd4" points="140,172 196,160 220,172 215,218 188,230 158,224 140,208 140,178"/>
+        <text class="r-label" x="182" y="198">北陸</text>
+        <polygon class="r-shape" id="map-中部" fill="#fae588" points="158,224 188,230 215,218 228,172 225,250 248,265 215,285 183,278 162,262 140,235 140,210 158,224"/>
+        <text class="r-label" x="200" y="258">中部</text>
+        <polygon class="r-shape" id="map-近畿" fill="#d4a8d8" points="115,248 140,238 140,235 162,262 183,278 185,310 158,325 125,313 108,290 110,258"/>
+        <text class="r-label" x="150" y="285">近畿</text>
+        <polygon class="r-shape" id="map-中国" fill="#a8bdd8" points="73,266 115,258 108,292 125,315 118,346 78,346 56,322 58,286"/>
+        <text class="r-label" x="90" y="305">中国</text>
+        <polygon class="r-shape" id="map-四国" fill="#f4d4a8" points="115,338 192,332 205,360 175,380 118,380 105,356"/>
+        <text class="r-label" x="155" y="358">四国</text>
+        <polygon class="r-shape" id="map-九州・沖縄" fill="#f4a878" points="33,292 76,286 80,323 68,354 45,368 22,354 17,320 28,300"/>
+        <text class="r-label" x="50" y="325">九州</text>
+        <rect class="r-shape" id="map-okinawa" fill="#f4a878" x="10" y="400" width="55" height="22" rx="5"/>
+        <text class="r-label" x="37" y="411">沖縄</text>
+        <line x1="37" y1="368" x2="37" y2="400" stroke="#e09060" stroke-width="1.2" stroke-dasharray="3,2" pointer-events="none"/>
+      </svg>
+    </div>
   </div>
 
   <!-- CONTENT -->
@@ -543,6 +575,11 @@
       <div style="color:var(--text-muted);font-size:0.82rem;">非表示のプレイリストはありません</div>
     </div>
     <hr style="margin:16px 0; border:none; border-top:1px solid var(--border);">
+    <label style="font-weight:600;">📥 オフライン用データ保存</label>
+    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">全プレイリストの動画データを保存すると、次回からAPIなしで利用できます。</p>
+    <button class="btn-primary" id="cache-all-btn" onclick="cacheAllVideos()" style="margin-bottom:4px;">📥 全データをキャッシュ保存</button>
+    <div id="cache-progress" style="font-size:0.78rem;color:var(--text-muted);min-height:18px;margin-bottom:4px;"></div>
+    <hr style="margin:16px 0; border:none; border-top:1px solid var(--border);">
     <label style="color:#dc3545;font-weight:600;">⚠️ データのリセット</label>
     <button class="btn-danger" onclick="resetWatchedData()">視聴履歴をすべてリセット</button>
     <button class="btn-secondary" onclick="closeSettings()">閉じる</button>
@@ -551,7 +588,7 @@
 
 <script>
 // ===== STATE =====
-let apiKey = localStorage.getItem('apiKey') || 'AIzaSyD1Ks9q5IuTvLuveq5mbYOYJDD9lCopLTc';
+let apiKey = 'AIzaSyAW3FWrj-u5jY21EylDQYmph_o8DnSb3yM';
 let channelHandle = '@footsteps8901';
 let channelId = '';
 let allPlaylists = [];
@@ -612,6 +649,22 @@ window.onload = function() {
   showMainApp();
   loadChannel();
   updateStreakLabel();
+  // 地図リスナー設定
+  const mapItems = [
+    ['map-北海道','北海道'],['map-東北','東北'],['map-関東','関東'],
+    ['map-北陸','北陸'],['map-中部','中部'],['map-近畿','近畿'],
+    ['map-中国','中国'],['map-四国','四国'],
+    ['map-九州・沖縄','九州・沖縄'],['map-okinawa','九州・沖縄']
+  ];
+  document.getElementById('map-all-btn').addEventListener('click', function(){ selectRegion('すべて'); });
+  for (const [id, region] of mapItems) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    (function(r){
+      el.addEventListener('click', function(){ selectRegion(r); });
+      el.addEventListener('touchend', function(e){ e.preventDefault(); selectRegion(r); }, {passive:false});
+    })(region);
+  }
 };
 
 function showSetupError(msg) {
@@ -892,17 +945,17 @@ function getCachedVideoIds(playlistId) {
   return { total: 0, watched: 0 };
 }
 function renderRegionTabs() {
-  const regions = getActiveRegions();
-  const container = document.getElementById('region-tabs-inner');
-  container.innerHTML = '';
+  const available = getActiveRegions();
+  const allBtn = document.getElementById('map-all-btn');
+  if (allBtn) allBtn.className = 'map-all-btn' + (currentRegion === 'すべて' ? ' active' : '');
+  const regions = ['北海道','東北','関東','北陸','中部','近畿','中国','四国','九州・沖縄'];
   for (const r of regions) {
-    const btn = document.createElement('button');
-    btn.className = 'region-tab' + (r === currentRegion ? ' active' : '');
-    const prog = getRegionProgress(r);
-    btn.innerHTML = r + '<span class="tab-prog">' + prog.watched + '/' + prog.total + '</span>';
-    btn.onclick = () => selectRegion(r);
-    container.appendChild(btn);
+    const el = document.getElementById('map-' + r);
+    if (!el) continue;
+    el.setAttribute('class', 'r-shape' + (r === currentRegion ? ' r-sel' : '') + (!available.includes(r) ? ' r-empty' : ''));
   }
+  const oEl = document.getElementById('map-okinawa');
+  if (oEl) oEl.setAttribute('class', 'r-shape' + (currentRegion === '九州・沖縄' ? ' r-sel' : ''));
 }
 function selectRegion(region) { currentRegion = region; renderRegionTabs(); filterPlaylists(); }
 
@@ -964,14 +1017,26 @@ async function openPlaylist(playlistId, title, region) {
     '<h2>' + escHtml(title) + '</h2>' +
     '<div class="playlist-header-meta"><span id="vv-count">読み込み中...</span></div>' +
     '<div style="margin-top:12px;"><div class="playlist-progress-bar" style="height:8px;"><div class="playlist-progress-fill" id="vv-fill" style="width:0%"></div></div></div>';
+  // キャッシュに完全データがあればAPIなしで即表示
+  const fullCache = localStorage.getItem('fs_full_' + playlistId);
+  if (fullCache) {
+    try {
+      const videos = JSON.parse(fullCache);
+      currentVideos = videos;
+      document.getElementById('video-loading').style.display = 'none';
+      renderVideoList(videos);
+      return;
+    } catch(e2) {}
+  }
   try {
     const videos = await loadPlaylistVideos(playlistId);
-    currentVideos = videos; // ← グローバルに保存
+    currentVideos = videos;
     localStorage.setItem('fs_videos_' + playlistId, JSON.stringify(videos.map(v => v.id)));
+    localStorage.setItem('fs_full_' + playlistId, JSON.stringify(videos));
     document.getElementById('video-loading').style.display = 'none';
     renderVideoList(videos);
   } catch(e) {
-    document.getElementById('video-loading').innerHTML = '<div style="color:#dc3545">❌ 動画の読み込みに失敗しました: ' + e.message + '</div>';
+    document.getElementById('video-loading').innerHTML = '<div style="color:#dc3545">❌ 動画の読み込みに失敗しました。<br><small>オフライン用データを事前に保存すると、APIなしで利用できます（設定→全データをキャッシュ保存）</small></div>';
   }
 }
 
@@ -1175,6 +1240,28 @@ function saveSettings() {
   if (newChannel) { channelHandle = newChannel; localStorage.setItem('fs_channel', channelHandle); }
   closeSettings();
   loadChannel();
+}
+
+async function cacheAllVideos() {
+  const btn = document.getElementById('cache-all-btn');
+  const prog = document.getElementById('cache-progress');
+  const lists = visiblePlaylists();
+  btn.disabled = true;
+  let done = 0;
+  for (const pl of lists) {
+    prog.textContent = '保存中... ' + done + ' / ' + lists.length + ' (' + pl.title.slice(0,20) + ')';
+    try {
+      const existing = localStorage.getItem('fs_full_' + pl.id);
+      if (!existing) {
+        const videos = await loadPlaylistVideos(pl.id);
+        localStorage.setItem('fs_videos_' + pl.id, JSON.stringify(videos.map(v => v.id)));
+        localStorage.setItem('fs_full_' + pl.id, JSON.stringify(videos));
+      }
+    } catch(e) { /* スキップ */ }
+    done++;
+  }
+  prog.textContent = '✅ ' + done + '件のプレイリストを保存しました。次回からAPIなしで利用できます。';
+  btn.disabled = false;
 }
 function resetWatchedData() {
   if (confirm('視聴履歴をすべてリセットしますか？この操作は取り消せません。')) {
